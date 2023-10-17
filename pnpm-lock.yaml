@@ -87,7 +87,7 @@ dependencies:
     specifier: ^0.13.1
     version: 0.13.1(vue@3.2.37)
   vue-i18n:
-    specifier: ^9.2.2
+    specifier: 9.2.2
     version: 9.2.2(vue@3.2.37)
   vue-router:
     specifier: 4.0.12
@@ -1892,12 +1892,12 @@ packages:
       through: 2.3.8
     dev: true
 
-  /acorn-import-assertions@1.9.0(acorn@8.7.1):
+  /acorn-import-assertions@1.9.0(acorn@8.10.0):
     resolution: {integrity: sha512-cmMwop9x+8KFhxvKrKfPYmN6/pKTYYHBqLa0DfvVZcKMJWNyWLnaqND7dx/qn66R7ewM1UX5XMaDVP5wlVTaVA==}
     peerDependencies:
       acorn: ^8
     dependencies:
-      acorn: 8.7.1
+      acorn: 8.10.0
     dev: true
 
   /acorn-jsx@5.3.2(acorn@8.7.1):
@@ -6160,8 +6160,8 @@ packages:
       '@webassemblyjs/ast': 1.11.6
       '@webassemblyjs/wasm-edit': 1.11.6
       '@webassemblyjs/wasm-parser': 1.11.6
-      acorn: 8.7.1
-      acorn-import-assertions: 1.9.0(acorn@8.7.1)
+      acorn: 8.10.0
+      acorn-import-assertions: 1.9.0(acorn@8.10.0)
       browserslist: 4.21.5
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.15.0

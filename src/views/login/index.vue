@@ -152,7 +152,7 @@ const t = window['$t']
 
 const formInline = reactive({
   username: 'admin',
-  password: 'admin',
+  password: '123123',
 })
 
 const rules = {
@@ -215,7 +215,7 @@ const handleSubmit = async (e: Event) => {
         const { tokenValue, tokenName } = res.data.token
         const { nickname, username, id } = res.data.userinfo
 
-        // 存储到 pinia 
+        // 存储到 pinia
         systemStore.setItem(SystemStoreEnum.USER_INFO, {
           [SystemStoreUserInfoEnum.USER_TOKEN]: tokenValue,
           [SystemStoreUserInfoEnum.TOKEN_NAME]: tokenName,
@@ -224,7 +224,7 @@ const handleSubmit = async (e: Event) => {
           [SystemStoreUserInfoEnum.NICK_NAME]: nickname,
           t
         })
-        
+
         window['$message'].success(t('login.login_success'))
         routerTurnByName(PageEnum.BASE_HOME_NAME, true)
       }

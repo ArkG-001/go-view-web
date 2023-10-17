@@ -5,7 +5,8 @@ import { ChatCategoryEnum, ChatCategoryEnumName } from '../index.d'
 // 远程共享库（调接口获取图像列表）
 const imageList = [
   { imageName: 'carousel1', imageUrl: 'https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg' },
-  { imageName: 'carousel2', imageUrl: 'https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg' }
+  { imageName: 'carousel2', imageUrl: 'https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg' },
+  { imageName: 'carousel3', imageUrl: 'https://ark-notes-pic.oss-cn-shanghai.aliyuncs.com/device1.png' }
 ]
 
 const photoConfigList = imageList.map(i => ({
