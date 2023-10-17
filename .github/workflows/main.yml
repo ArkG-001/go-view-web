@@ -3,9 +3,9 @@ name: note build
 on:
   push:
     # 只有master分支发生push事件时，才会触发workflow
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 env:
   SERVER_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }} # 服务器私钥
