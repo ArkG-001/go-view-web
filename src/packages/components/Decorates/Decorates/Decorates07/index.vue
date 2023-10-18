@@ -4,7 +4,7 @@
       <polyline
         style="fill: none; stroke-width: 3; stroke-opacity: 0.5"
         class="stroke"
-        :points="`15.5 ${h - 16.5},12.5 40,${w - 200} 40`"
+        :points="`16.5 ${h - 16.5},12.5 40,${w - 16.5} 40`"
       />
       <circle class="fill" cx="15.5" :cy="h - 20" r="6" stroke="black" fill="#5eacff" />
     </svg>
@@ -12,11 +12,10 @@
       <polyline
         style="fill: none; stroke-width: 3; stroke-opacity: 0.5"
         class="stroke"
-        :points="`15.5 40,12.5 ${h - 40},${w - 200} ${h - 40}`"
+        :points="`16.5 40,16.5  ${h - 40},${w - 16.5} ${h - 40}`"
       />
       <circle class="fill" cx="15.5" :cy="40" r="6" stroke="black" fill="#5eacff" />
     </svg>
-    <span :class="{ text: direction === 'up', down: direction === 'down' }">{{ dataset }}</span>
   </div>
 </template>
 
