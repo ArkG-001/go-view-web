@@ -1,7 +1,7 @@
 // 模块 Path 前缀分类
 export enum ModuleTypeEnum {
   SYSTEM = 'sys',
-  PROJECT = 'project',
+  PROJECT = 'project'
 }
 
 // 请求结果集
@@ -12,7 +12,7 @@ export enum ResultEnum {
   SERVER_FORBIDDEN = 403,
   NOT_FOUND = 404,
   TOKEN_OVERDUE = 886,
-  TIMEOUT = 60000,
+  TIMEOUT = 60000
 }
 
 // 数据相关
@@ -22,7 +22,9 @@ export enum RequestDataTypeEnum {
   // 请求数据
   AJAX = 1,
   // 数据池
-  Pond = 2
+  Pond = 2,
+  // 实时数据
+  SOCKET = 3
 }
 
 // 请求主体类型
@@ -100,7 +102,7 @@ export const RequestBodyEnumList = [
 export enum RequestParamsTypeEnum {
   PARAMS = 'Params',
   BODY = 'Body',
-  HEADER = 'Header',
+  HEADER = 'Header'
 }
 
 /**

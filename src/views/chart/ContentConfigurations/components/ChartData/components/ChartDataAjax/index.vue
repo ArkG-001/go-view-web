@@ -75,7 +75,7 @@
 
     <!-- 骨架图 -->
     <go-skeleton :load="loading" :repeat="3"></go-skeleton>
-    
+
     <!-- 请求配置model -->
     <chart-data-request
       v-model:modelShow="requestShow"
@@ -128,6 +128,7 @@ const sendHandle = async () => {
   loading.value = true
   try {
     const res = await customizeHttp(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
+    console.log(res, 'res')
     loading.value = false
     if (res) {
       const { data } = res
@@ -142,7 +143,7 @@ const sendHandle = async () => {
     }
     window['$message'].warning('没有拿到返回值，请检查接口！')
   } catch (error) {
-    console.error(error);
+    console.error(error)
     loading.value = false
     window['$message'].warning('数据异常，请检查参数！')
   }

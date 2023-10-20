@@ -38,6 +38,7 @@
     "naive-ui": "2.34.3",
     "pinia": "^2.0.13",
     "screenfull": "^6.0.1",
+    "socket.io-client": "^4.7.2",
     "three": "^0.145.0",
     "vue": "^3.2.31",
     "vue-demi": "^0.13.1",

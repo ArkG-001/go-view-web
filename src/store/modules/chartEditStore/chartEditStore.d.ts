@@ -130,7 +130,7 @@ export type EditCanvasConfigType = {
   // 图表主题颜色
   [EditCanvasConfigEnum.CHART_THEME_COLOR]: ChartColorsNameType
   // 自定义图表主题颜色
-  [EditCanvasConfigEnum.CHART_CUSTOM_THEME_COLOR_INFO]?: CustomColorsType[] 
+  [EditCanvasConfigEnum.CHART_CUSTOM_THEME_COLOR_INFO]?: CustomColorsType[]
   // 图表全局配置
   [EditCanvasConfigEnum.CHART_THEME_SETTING]: GlobalThemeJsonType
   // 图表主题颜色
@@ -232,6 +232,21 @@ export interface RequestConfigType extends RequestPublicConfigType {
   requestSQLContent: {
     sql: string
   }
+}
+
+// socket 请求配置
+export type SocketConfigType = {
+  socketUrl: string
+  socketParams: RequestParamsObjType
+  socketInterval: number
+  socketIntervalUnit: RequestHttpIntervalEnum
+}
+
+// socket 请求配置
+export type RequestDataSocketItemType = {
+  dataSocketId: string,
+  dataSocketName: string,
+  dataSocketRequestConfig: SocketConfigType
 }
 
 // Store 类型

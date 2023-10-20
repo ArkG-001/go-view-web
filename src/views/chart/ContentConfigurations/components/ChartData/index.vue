@@ -9,6 +9,8 @@
     <chart-data-ajax v-if="targetData.request.requestDataType === RequestDataTypeEnum.AJAX"></chart-data-ajax>
     <!-- 数据池 -->
     <chart-data-pond v-if="targetData.request.requestDataType === RequestDataTypeEnum.Pond"></chart-data-pond>
+    <!-- SOCKET -->
+    <chart-data-socket v-if="targetData.request.requestDataType === RequestDataTypeEnum.SOCKET"></chart-data-socket>
   </div>
 </template>
 
@@ -24,6 +26,7 @@ import { SelectCreateDataType, SelectCreateDataEnum } from './index.d'
 const ChartDataStatic = loadAsyncComponent(() => import('./components/ChartDataStatic/index.vue'))
 const ChartDataAjax = loadAsyncComponent(() => import('./components/ChartDataAjax/index.vue'))
 const ChartDataPond = loadAsyncComponent(() => import('./components/ChartDataPond/index.vue'))
+const ChartDataSocket = loadAsyncComponent(() => import('./components/ChartDataSocket/index.vue'))
 
 const { targetData } = useTargetData()
 
@@ -40,6 +43,10 @@ const selectOptions: SelectCreateDataType[] = [
   {
     label: SelectCreateDataEnum.Pond,
     value: RequestDataTypeEnum.Pond
+  },
+  {
+    label: SelectCreateDataEnum.SOCKET,
+    value: RequestDataTypeEnum.SOCKET
   }
 ]
 

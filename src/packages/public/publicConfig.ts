@@ -1,5 +1,5 @@
 import { getUUID } from '@/utils'
-import { RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import { RequestConfigType, SocketConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { groupTitle } from '@/settings/designSetting'
 import { BaseEvent, EventLife } from '@/enums/eventEnum'
 import {
@@ -9,12 +9,7 @@ import {
   RequestContentTypeEnum,
   RequestBodyEnum
 } from '@/enums/httpEnum'
-import {
-  ChartFrameEnum,
-  PublicConfigType,
-  CreateComponentType,
-  CreateComponentGroupType
-} from '@/packages/index.d'
+import { ChartFrameEnum, PublicConfigType, CreateComponentType, CreateComponentGroupType } from '@/packages/index.d'
 import { chartInitConfig } from '@/settings/designSetting'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -40,6 +35,14 @@ export const requestConfig: RequestConfigType = {
     Header: {},
     Params: {}
   }
+}
+
+// socket基础属性
+export const socketConfig: SocketConfigType = {
+  socketUrl: '',
+  socketParams: {},
+  socketInterval: 30,
+  socketIntervalUnit: RequestHttpIntervalEnum.SECOND
 }
 
 // 单实例类
