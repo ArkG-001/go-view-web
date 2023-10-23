@@ -181,6 +181,7 @@ export enum ChartEditStoreEnum {
   MOUSE_POSITION = 'mousePosition',
   TARGET_CHART = 'targetChart',
   RECORD_CHART = 'recordChart',
+  SOCKET_INSTANCE = 'socketInstance',
   // 以下需要存储
   EDIT_CANVAS_CONFIG = 'editCanvasConfig',
   REQUEST_GLOBAL_CONFIG = 'requestGlobalConfig',
@@ -236,6 +237,10 @@ export interface RequestConfigType extends RequestPublicConfigType {
   }
   // socket 事件名
   socketEventName?: string
+  // socket 过滤键
+  socketFilterKey?: string
+  // socket 过滤值
+  socketFilterValue?: string
 }
 
 // socket 请求配置
@@ -265,6 +270,7 @@ export interface ChartEditStoreType {
   [ChartEditStoreEnum.MOUSE_POSITION]: MousePositionType
   [ChartEditStoreEnum.TARGET_CHART]: TargetChartType
   [ChartEditStoreEnum.RECORD_CHART]?: RecordChartType
+  [ChartEditStoreEnum.SOCKET_INSTANCE]?: any
   [ChartEditStoreEnum.REQUEST_GLOBAL_CONFIG]: RequestGlobalConfigType
   [ChartEditStoreEnum.COMPONENT_LIST]: Array<CreateComponentType | CreateComponentGroupType>
 }

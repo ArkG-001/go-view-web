@@ -105,8 +105,9 @@ import { ref, computed, watch, toRef, toRefs, toRaw, reactive } from 'vue'
 import { useTargetData } from '../../../hooks/useTargetData.hook'
 import { MonacoEditor } from '@/components/Pages/MonacoEditor'
 import { icon } from '@/plugins'
-import { goDialog, toString } from '@/utils'
+import { goDialog, newFunctionHandle, toString } from '@/utils'
 import { customizeHttp } from '@/api/http'
+import { TargetSocket } from '@/api/socket'
 import cloneDeep from 'lodash/cloneDeep'
 
 const { DocumentTextIcon } = icon.ionicons5
@@ -114,6 +115,8 @@ const { FilterIcon, FilterEditIcon } = icon.carbon
 const { targetData, chartEditStore } = useTargetData()
 const { requestDataType } = toRefs(targetData.value.request)
 const { requestOriginUrl } = toRefs(chartEditStore.getRequestGlobalConfig)
+console.log(requestDataType, 'requestDataType')
+const { socketInstance } = toRefs(chartEditStore) as any
 
 // 受控弹窗
 const showModal = ref(false)
@@ -127,14 +130,30 @@ const sourceData = ref<any>('')
 // 动态获取数据
 const fetchTargetData = async () => {
   try {
-    const res = await customizeHttp(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
-    if (res) {
-      sourceData.value = res
-      return
+    let res
+    if (requestDataType.value === 3) {
+      socketInstance.value = new TargetSocket(
+        toRaw(targetData.value.request),
+        toRaw(chartEditStore.getRequestGlobalConfig)
+      )
+      socketInstance.value.connect(() => {
+        console.log('连接成功-----3')
+        socketInstance.value.subscribe()
+      })
+      socketInstance.value.on((data: any) => {
+        console.log('监听3：', data)
+        sourceData.value = JSON.parse(data)
+      })
+    } else {
+      res = await customizeHttp(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
+      if (res) {
+        sourceData.value = res
+        return
+      }
     }
     window['$message'].warning('没有拿到返回值，请检查接口！')
   } catch (error) {
-    console.error(error);
+    console.error(error)
     window['$message'].warning('数据异常，请检查参数！')
   }
 }
@@ -143,8 +162,14 @@ const fetchTargetData = async () => {
 const filterRes = computed(() => {
   try {
     const fn = new Function('data', 'res', filter.value)
+    console.log(fn, 'fn--------')
     const response = cloneDeep(sourceData.value)
-    const res = fn(response?.data, response)
+    let res
+    if (requestDataType.value === 3) {
+      res = fn(response, response)
+    } else {
+      res = fn(response?.data, response)
+    }
     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     errorFlag.value = false
     return toString(res)
@@ -157,6 +182,10 @@ const filterRes = computed(() => {
 
 // 新增过滤器
 const addFilter = () => {
+  if (requestDataType.value === 3 && !socketInstance.value) {
+    window['$message'].warning('socket连接异常，请连接后重试！')
+    return
+  }
   showModal.value = true
 }
 

@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { ref, toRefs, toRaw, onBeforeUnmount, computed, watchEffect } from 'vue'
 import { icon } from '@/plugins'
-import { customizeSocket, TargetSocket } from '@/api/socket'
+import { TargetSocket } from '@/api/socket'
 import { SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { ChartDataSocketControl } from './components/ChartDataSocketControl'
 import { useDesignStore } from '@/store/modules/designStore/designStore'
@@ -82,6 +82,7 @@ const { HelpOutlineIcon, FlashIcon, PulseIcon, FishIcon } = icon.ionicons5
 const { targetData, chartEditStore } = useTargetData()
 
 const { requestDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
+const { socketInstance } = toRefs(chartEditStore) as any
 
 const loading = ref(false)
 const controlModel = ref(false)
@@ -111,7 +112,6 @@ const controlModelHandle = () => {
   controlModel.value = true
 }
 
-let targetSocket: any
 // 发送请求
 const sendHandle = async () => {
   if (!targetData.value?.request) {
@@ -120,19 +120,28 @@ const sendHandle = async () => {
   }
   try {
     console.log('连接测试')
-    targetSocket = new TargetSocket(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
-    targetSocket.connect(() => {
+    socketInstance.value = new TargetSocket(
+      toRaw(targetData.value.request),
+      toRaw(chartEditStore.getRequestGlobalConfig)
+    )
+    socketInstance.value.connect(() => {
       console.log('连接成功-----')
-      targetSocket.subscribe()
+      window['$message'].success('连接成功！')
+      socketInstance.value.subscribe()
     })
-    targetSocket.on((data: any) => {
+    socketInstance.value.on((data: any) => {
       console.log('监听2：', data)
       if (data) {
-        targetData.value.option.dataset = newFunctionHandle(data?.data, data, targetData.value.filter)
+        targetData.value.option.dataset = newFunctionHandle(data, data, targetData.value.filter)
         showMatching.value = true
         return
       }
       window['$message'].warning('没有拿到返回值，请检查接口！')
+    })
+    socketInstance.value.onDisconnect(() => {
+      console.log('断开连接')
+      window['$message'].success('断开连接成功!')
+      socketInstance.value = undefined
     })
   } catch (error) {
     console.error(error)
@@ -143,11 +152,11 @@ const sendHandle = async () => {
 // 断开连接
 const offHandle = () => {
   console.log('断开')
-  if (!targetSocket) {
+  if (!socketInstance.value) {
     window['$message'].warning('请先连接！')
     return
   }
-  targetSocket.close()
+  socketInstance.value.close()
 }
 watchEffect(() => {
   const filter = targetData.value?.filter

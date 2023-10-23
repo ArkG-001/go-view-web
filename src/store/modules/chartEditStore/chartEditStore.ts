@@ -37,7 +37,6 @@ import {
   TargetChartType,
   RecordChartType,
   RequestGlobalConfigType,
-  RequestSocketGlobalConfigType,
   EditCanvasConfigType
 } from './chartEditStore.d'
 
@@ -94,6 +93,8 @@ export const useChartEditStore = defineStore({
       hoverId: undefined,
       selectId: []
     },
+    // socket 实例
+    socketInstance: null,
     // 记录临时数据（复制等）
     recordChart: undefined,
     // -----------------------
@@ -181,6 +182,9 @@ export const useChartEditStore = defineStore({
     },
     getRecordChart(): RecordChartType | undefined {
       return this.recordChart
+    },
+    getSocketInstance(): any {
+      return this.socketInstance
     },
     getRequestGlobalConfig(): RequestGlobalConfigType {
       return this.requestGlobalConfig

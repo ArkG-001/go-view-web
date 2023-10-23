@@ -35,7 +35,9 @@ export const requestConfig: RequestConfigType = {
     Header: {},
     Params: {}
   },
-  socketEventName: ''
+  socketEventName: '',
+  socketFilterKey: '',
+  socketFilterValue: ''
 }
 
 // 单实例类

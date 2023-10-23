@@ -53,7 +53,11 @@ export class TargetSocket {
 
   public close() {
     this.socket.close()
-    return window['$message'].success('断开连接成功!')
+  }
+
+  // 断开连接时触发
+  public onDisconnect(callback: (...args: any[]) => void) {
+    this.socket.on('disconnect', callback)
   }
 
   public unsubscribe(channel: string) {
