@@ -29,7 +29,7 @@
               </n-icon>
             </template>
           </n-button>
-          <n-button type="primary" @click="closeHandle">保存</n-button>
+          <n-button type="primary" @click="closeHandle">保存 & 尝试连接</n-button>
         </n-space>
       </template>
     </n-card>
@@ -50,9 +50,9 @@ import noData from '@/assets/images/canvas/noData.png'
 import { ChartDataPondList } from '../ChartDataPondList'
 import { SocketDataRequest } from '../../../ChartDataRequest'
 import { ChartDataDisplay } from '../ChartDataDisplay'
-import { requestConfig } from '@/packages/public/publicConfig'
+import { requestConfig, socketConfig } from '@/packages/public/publicConfig'
 import { useTargetData } from '@/views/chart/ContentConfigurations/components/hooks/useTargetData.hook'
-import { RequestDataPondItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import { RequestDataSocketItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { RequestDataTypeEnum } from '@/enums/httpEnum'
 import { icon } from '@/plugins'
 import { getUUID, goDialog } from '@/utils'
@@ -62,22 +62,22 @@ const props = defineProps({
   modelShow: Boolean
 })
 
-const emit = defineEmits(['update:modelShow'])
+const emit = defineEmits(['update:modelShow', 'sendHandle'])
 const { PencilIcon } = icon.ionicons5
 const { chartEditStore, targetData } = useTargetData()
-const { requestDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
+const { socketDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
 const requestShow = ref(false)
 const modelShowRef = ref(false)
 const loading = ref(false)
 const isEdit = ref(false)
-const editData = ref<RequestDataPondItemType>()
+const editData = ref<RequestDataSocketItemType>()
 
 // 所选数据池
 const pondData = computed(() => {
   const selectId = targetData?.value?.request?.requestDataPondId
   if (!selectId) return undefined
-  const data = requestDataPond.value.filter(item => {
-    return selectId === item.dataPondId
+  const data = socketDataPond.value.filter(item => {
+    return selectId === item.dataSocketId
   })
   return data[0]
 })
@@ -113,15 +113,15 @@ const openPond = (isEditFlag: boolean = false) => {
 const createPond = () => {
   const id = getUUID()
   editData.value = {
-    dataPondId: id,
-    dataPondName: id,
-    dataPondRequestConfig: cloneDeep({ ...requestConfig, requestDataType: RequestDataTypeEnum.SOCKET })
+    dataSocketId: id,
+    dataSocketName: id,
+    dataSocketRequestConfig: cloneDeep({ ...socketConfig, requestDataType: RequestDataTypeEnum.SOCKET })
   }
   openPond()
 }
 
 // 完成创建/编辑
-const saveHandle = (newData: RequestDataPondItemType) => {
+const saveHandle = (newData: RequestDataSocketItemType) => {
   // 走创建
   if (isEdit.value) {
     editSaveHandle(newData)
@@ -133,20 +133,20 @@ const saveHandle = (newData: RequestDataPondItemType) => {
 }
 
 // 编辑保存之后
-const editSaveHandle = (newData: RequestDataPondItemType) => {
+const editSaveHandle = (newData: RequestDataSocketItemType) => {
   try {
-    const targetIndex = requestDataPond.value.findIndex(item => item.dataPondId === newData.dataPondId)
+    const targetIndex = socketDataPond.value.findIndex(item => item.dataSocketId === newData.dataSocketId)
     if (targetIndex !== -1) {
-      requestDataPond.value.splice(targetIndex, 1, newData)
+      socketDataPond.value.splice(targetIndex, 1, newData)
       // 修改数据池后, 修改所有关联的组件
       chartEditStore.getComponentList.forEach(item => {
         if (
-          item.request.requestDataType === RequestDataTypeEnum.SOCKET &&
-          item.request.requestDataPondId === newData.dataPondId
+          item.request.requestDataType === RequestDataTypeEnum.Pond &&
+          item.request.requestDataPondId === newData.dataSocketId
         ) {
           item.request = {
-            ...toRaw(newData.dataPondRequestConfig),
-            requestDataPondId: newData.dataPondId
+            ...toRaw(newData.dataSocketRequestConfig),
+            requestDataPondId: newData.dataSocketId
           }
         }
       })
@@ -160,10 +160,10 @@ const editSaveHandle = (newData: RequestDataPondItemType) => {
 }
 
 // 创建保存成功之后
-const createSaveHandle = (newData: RequestDataPondItemType) => {
+const createSaveHandle = (newData: RequestDataSocketItemType) => {
   try {
     if (editData.value) {
-      requestDataPond.value.unshift(newData)
+      socketDataPond.value.unshift(newData)
       window.$message.success('创建成功!')
     } else {
       window.$message.error('创建失败，请稍后重试!')
@@ -174,15 +174,15 @@ const createSaveHandle = (newData: RequestDataPondItemType) => {
 }
 
 // 删除数据池
-const deletePond = (targetData: RequestDataPondItemType) => {
+const deletePond = (targetData: RequestDataSocketItemType) => {
   goDialog({
     message: '删除数据后，需手动处理使用改接口的组件，是否继续？',
     isMaskClosable: true,
     transformOrigin: 'center',
     onPositiveCallback: () => {
-      const targetIndex = requestDataPond.value.findIndex(item => item.dataPondId === targetData.dataPondId)
+      const targetIndex = socketDataPond.value.findIndex(item => item.dataSocketId === targetData.dataSocketId)
       if (targetIndex !== -1) {
-        requestDataPond.value.splice(targetIndex, 1)
+        socketDataPond.value.splice(targetIndex, 1)
         window.$message.success('删除成功!')
       } else {
         window.$message.error('删除失败，请稍后重试！')
@@ -196,12 +196,14 @@ const closeHandle = () => {
   // 将所选内容赋值给对象
   if (pondData.value) {
     targetData.value.request = {
-      ...toRaw(pondData.value.dataPondRequestConfig),
-      requestDataPondId: pondData.value.dataPondId
+      ...toRaw(pondData.value.dataSocketRequestConfig),
+      requestDataPondId: pondData.value.dataSocketId
     }
     console.log(targetData.value.request, 'socket')
+    console.log(pondData.value, 'pondData.value')
   }
   emit('update:modelShow', false)
+  emit('sendHandle')
 }
 </script>
 

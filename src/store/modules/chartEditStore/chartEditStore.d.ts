@@ -208,6 +208,8 @@ export interface RequestGlobalConfigType extends RequestPublicConfigType {
   requestInterval: number
   // 请求源地址
   requestOriginUrl?: string
+  // socket源地址
+  socketOriginUrl?: string
   // 公共数据池
   requestDataPond: RequestDataPondItemType[]
 }
@@ -232,14 +234,8 @@ export interface RequestConfigType extends RequestPublicConfigType {
   requestSQLContent: {
     sql: string
   }
-}
-
-// socket 请求配置
-export type SocketConfigType = {
-  socketUrl: string
-  socketParams: RequestParamsObjType
-  socketInterval: number
-  socketIntervalUnit: RequestHttpIntervalEnum
+  // socket 事件名
+  socketEventName?: string
 }
 
 // socket 请求配置
@@ -247,6 +243,17 @@ export type RequestDataSocketItemType = {
   dataSocketId: string,
   dataSocketName: string,
   dataSocketRequestConfig: SocketConfigType
+}
+
+export type RequestSocketGlobalConfigType = {
+  // 请求源地址
+  requestOriginUrl?: string
+  // 组件定制轮询时间
+  requestInterval: number
+  // 时间单位（时分秒）
+  requestIntervalUnit: RequestHttpIntervalEnum
+  // 公共数据池
+  requestDataSocket: RequestDataSocketItemType[]
 }
 
 // Store 类型

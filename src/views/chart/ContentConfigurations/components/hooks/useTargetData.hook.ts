@@ -7,7 +7,6 @@ export const useTargetData = () => {
   const chartEditStore = useChartEditStore()
   const targetData: Ref<CreateComponentType | CreateComponentGroupType> = computed(() => {
     const list = chartEditStore.getComponentList
-    console.log('list', list)
     const targetIndex = chartEditStore.fetchTargetIndex()
     return list[targetIndex]
   })

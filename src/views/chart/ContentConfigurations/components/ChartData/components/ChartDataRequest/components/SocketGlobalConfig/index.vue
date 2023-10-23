@@ -10,7 +10,11 @@
     >
       <!-- 源地址 -->
       <setting-item>
-        <n-input v-model:value.trim="requestOriginUrl" :disabled="editDisabled" placeholder="例：ws://127.0.0.1/"></n-input>
+        <n-input
+          v-model:value.trim="socketOriginUrl"
+          :disabled="editDisabled"
+          placeholder="例：ws://127.0.0.1/"
+        ></n-input>
       </setting-item>
       <setting-item name="失败后重连间隔，为 0 不会重连">
         <n-input-group>
@@ -55,7 +59,7 @@ import { icon } from '@/plugins'
 
 const { PencilIcon, ChevronDownOutlineIcon, ChevronUpOutlineIcon } = icon.ionicons5
 const { chartEditStore } = useTargetData()
-const { requestOriginUrl, requestInterval, requestIntervalUnit } = toRefs(chartEditStore.getRequestGlobalConfig)
+const { requestInterval, requestIntervalUnit, socketOriginUrl } = toRefs(chartEditStore.requestGlobalConfig)
 const editDisabled = ref(true)
 
 const designStore = useDesignStore()

@@ -7,9 +7,9 @@
         <div class="go-pr-3">
           <n-space vertical>
             <socket-global-config></socket-global-config>
-<!--              :target-data-request="targetDataRequest?.dataPondRequestConfig"-->
+            <!--              :target-data-request="targetDataRequest?.dataPondRequestConfig"-->
             <socket-target-config
-              :target-data-request="targetDataRequest?.dataSocketRequestConfig"
+              :target-data-request="targetDataRequest?.dataPondRequestConfig"
             ></socket-target-config>
           </n-space>
         </div>
@@ -18,9 +18,9 @@
       <template #action>
         <n-space justify="space-between">
           <n-space v-if="targetDataRequest">
-            <n-tag  :bordered="false" type="primary">名称：</n-tag>
+            <n-tag :bordered="false" type="primary">名称：</n-tag>
             <n-input
-              v-model:value="targetDataRequest.dataSocketName"
+              v-model:value="targetDataRequest.dataPondName"
               ref="inputInstRef"
               type="text"
               size="small"
@@ -44,8 +44,6 @@
 
 <script script lang="ts" setup>
 import { PropType, ref, watch } from 'vue'
-import { RequestContentTypeEnum } from '@/enums/httpEnum'
-import { useTargetData } from '../../../hooks/useTargetData.hook'
 import { SocketGlobalConfig } from './components/SocketGlobalConfig'
 import { SocketTargetConfig } from './components/SocketTargetConfig'
 import { RequestDataPondItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
@@ -56,6 +54,7 @@ const props = defineProps({
   modelShow: Boolean,
   targetDataRequest: Object as PropType<RequestDataPondItemType>
 })
+console.log(props.targetDataRequest, 'props.targetDataRequest----------------')
 const emit = defineEmits(['update:modelShow', 'editSaveHandle'])
 
 const { dataSyncUpdate } = useSync()
@@ -63,16 +62,19 @@ const pondName = ref()
 const inputInstRef = ref()
 const modelShowRef = ref(false)
 
-watch(() => props.modelShow, (newValue) => {
-  modelShowRef.value = newValue
-})
-
+watch(
+  () => props.modelShow,
+  newValue => {
+    modelShowRef.value = newValue
+  }
+)
 
 const closeHandle = () => {
   emit('update:modelShow', false)
 }
 
 const closeAndSendHandle = () => {
+  console.log(props.targetDataRequest, '保存')
   if (!props.targetDataRequest?.dataPondName) {
     window.$message.warning('请在左下角输入名称！')
     inputInstRef.value?.focus()

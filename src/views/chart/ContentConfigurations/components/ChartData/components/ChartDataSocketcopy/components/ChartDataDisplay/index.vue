@@ -25,7 +25,7 @@
           </setting-item-box>
 
           <setting-item-box name="源地址" :alone="true">
-            <n-input size="small" :placeholder="globalData?.socketOriginUrl || '暂无'" :disabled="true">
+            <n-input size="small" :placeholder="globalData?.requestOriginUrl || '暂无'" :disabled="true">
               <template #prefix>
                 <n-icon :component="PulseIcon" />
               </template>
@@ -33,7 +33,7 @@
           </setting-item-box>
 
           <setting-item-box name="标识" :alone="true">
-            <n-input size="small" :placeholder="socketEventName || '暂无'" :disabled="true">
+            <n-input size="small" :placeholder="eventName || '暂无'" :disabled="true">
               <template #prefix>
                 <n-icon :component="FlashIcon" />
               </template>
@@ -49,22 +49,59 @@
 <script setup lang="ts">
 import { PropType, ref, toRefs } from 'vue'
 import { icon } from '@/plugins'
+import { MonacoEditor } from '@/components/Pages/MonacoEditor'
 import { SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
-import { RequestGlobalConfigType, RequestDataPondItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
-import { RequestParamsTypeEnum, SelectHttpTimeNameObj } from '@/enums/httpEnum'
+import {
+  RequestDataPondItemType,
+  RequestGlobalConfigType,
+  RequestSocketGlobalConfigType,
+  RequestDataSocketItemType
+} from '@/store/modules/chartEditStore/chartEditStore.d'
+import displayTable from './displayTable.vue'
+import {
+  RequestBodyEnum,
+  RequestParamsTypeEnum,
+  SelectHttpTimeNameObj,
+  RequestContentTypeEnum,
+  RequestBodyEnumList,
+  RequestParamsObjType
+} from '@/enums/httpEnum'
 
 const props = defineProps({
-  globalData: Object as PropType<RequestGlobalConfigType>,
-  targetData: Object as PropType<RequestDataPondItemType>
+  globalData: Object as PropType<RequestSocketGlobalConfigType>,
+  targetData: Object as PropType<RequestDataSocketItemType>
 })
 
 const { HelpOutlineIcon, FlashIcon, PulseIcon } = icon.ionicons5
-const { requestInterval, requestParams, requestIntervalUnit, socketEventName } = toRefs(
-  (props.targetData as RequestDataPondItemType).dataPondRequestConfig
+const { requestInterval, requestParams, requestIntervalUnit, eventName } = toRefs(
+  (props.targetData as RequestDataSocketItemType).dataSocketRequestConfig
 )
 
 const tabs = [RequestParamsTypeEnum.HEADER]
+const requestContentTypeObj = {
+  [RequestContentTypeEnum.DEFAULT]: '普通请求',
+  [RequestContentTypeEnum.SQL]: 'SQL 请求'
+}
 const tabValue = ref<RequestParamsTypeEnum>(RequestParamsTypeEnum.PARAMS)
+
+// 更新参数表格数据
+const updateRequestParams = (paramsObj: RequestParamsObjType) => {
+  if (tabValue.value !== RequestParamsTypeEnum.BODY) {
+    requestParams.value[tabValue.value] = paramsObj
+  }
+}
+
+// 更新参数表格数据
+const updateRequestBodyTable = (paramsObj: RequestParamsObjType) => {
+  if (
+    tabValue.value === RequestParamsTypeEnum.BODY &&
+    // 仅有两种类型有 body
+    (requestParamsBodyType.value === RequestBodyEnum.FORM_DATA ||
+      requestParamsBodyType.value === RequestBodyEnum.X_WWW_FORM_URLENCODED)
+  ) {
+    requestParams.value[RequestParamsTypeEnum.BODY][requestParamsBodyType.value] = paramsObj
+  }
+}
 </script>
 
 <style lang="scss" scoped>

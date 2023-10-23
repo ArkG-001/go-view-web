@@ -5,24 +5,27 @@ import { PublicGroupConfigClass } from '@/packages/public/publicConfig'
 import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 import { defaultTheme, globalThemeJson } from '@/settings/chartThemes/index'
-import { requestInterval, previewScaleType, requestIntervalUnit } from '@/settings/designSetting'
+import {
+  requestInterval,
+  previewScaleType,
+  requestIntervalUnit,
+  socketInterval,
+  SocketIntervalUnit
+} from '@/settings/designSetting'
 // 记录记录
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
 // 全局设置
 import { useSettingStore } from '@/store/modules/settingStore/settingStore'
 // 历史类型
-import { HistoryActionTypeEnum, HistoryItemType, HistoryTargetTypeEnum } from '@/store/modules/chartHistoryStore/chartHistoryStore.d'
+import {
+  HistoryActionTypeEnum,
+  HistoryItemType,
+  HistoryTargetTypeEnum
+} from '@/store/modules/chartHistoryStore/chartHistoryStore.d'
 // 画布枚举
 import { MenuEnum, SyncEnum } from '@/enums/editPageEnum'
 
-import {
-  getUUID,
-  loadingStart,
-  loadingFinish,
-  loadingError,
-  isString,
-  isArray
-} from '@/utils'
+import { getUUID, loadingStart, loadingFinish, loadingError, isString, isArray } from '@/utils'
 
 import {
   ProjectInfoType,
@@ -34,6 +37,7 @@ import {
   TargetChartType,
   RecordChartType,
   RequestGlobalConfigType,
+  RequestSocketGlobalConfigType,
   EditCanvasConfigType
 } from './chartEditStore.d'
 
@@ -139,6 +143,7 @@ export const useChartEditStore = defineStore({
     requestGlobalConfig: {
       requestDataPond: [],
       requestOriginUrl: '',
+      socketOriginUrl: '',
       requestInterval: requestInterval,
       requestIntervalUnit: requestIntervalUnit,
       requestParams: {
@@ -531,7 +536,7 @@ export const useChartEditStore = defineStore({
           e.id = getUUID()
           // 分组列表生成新 id
           if (e.isGroup) {
-            (e as CreateComponentGroupType).groupList.forEach((item: CreateComponentType) => {
+            ;(e as CreateComponentGroupType).groupList.forEach((item: CreateComponentType) => {
               item.id = getUUID()
             })
           }

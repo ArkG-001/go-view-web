@@ -1,5 +1,5 @@
 import { getUUID } from '@/utils'
-import { RequestConfigType, SocketConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import { RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { groupTitle } from '@/settings/designSetting'
 import { BaseEvent, EventLife } from '@/enums/eventEnum'
 import {
@@ -34,15 +34,8 @@ export const requestConfig: RequestConfigType = {
     },
     Header: {},
     Params: {}
-  }
-}
-
-// socket基础属性
-export const socketConfig: SocketConfigType = {
-  socketUrl: '',
-  socketParams: {},
-  socketInterval: 30,
-  socketIntervalUnit: RequestHttpIntervalEnum.SECOND
+  },
+  socketEventName: ''
 }
 
 // 单实例类

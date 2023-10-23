@@ -11,7 +11,7 @@
       </setting-item-box>
 
       <setting-item-box name="接口地址" :alone="true">
-        <n-input size="small" :placeholder="pondData?.dataPondRequestConfig.requestUrl || '暂无'" :disabled="true">
+        <n-input size="small" :placeholder="pondData?.dataSocketRequestConfig.requestUrl || '暂无'" :disabled="true">
           <template #prefix>
             <n-icon :component="FlashIcon" />
           </template>
@@ -44,15 +44,7 @@
           <flash-icon />
         </n-icon>
       </template>
-      连接测试
-    </n-button>
-    <n-button type="primary" ghost @click="offHandle">
-      <template #icon>
-        <n-icon>
-          <flash-icon />
-        </n-icon>
-      </template>
-      断开连接
+      发送请求
     </n-button>
   </setting-item-box>
 
@@ -69,7 +61,8 @@
 <script setup lang="ts">
 import { ref, toRefs, toRaw, onBeforeUnmount, computed, watchEffect } from 'vue'
 import { icon } from '@/plugins'
-import { customizeSocket, TargetSocket } from '@/api/socket'
+import { http, customizeHttp } from '@/api/http'
+import { customizeSocket } from '@/api/socket'
 import { SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { ChartDataSocketControl } from './components/ChartDataSocketControl'
 import { useDesignStore } from '@/store/modules/designStore/designStore'
@@ -81,7 +74,7 @@ const designStore = useDesignStore()
 const { HelpOutlineIcon, FlashIcon, PulseIcon, FishIcon } = icon.ionicons5
 const { targetData, chartEditStore } = useTargetData()
 
-const { requestDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
+const { socketDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
 
 const loading = ref(false)
 const controlModel = ref(false)
@@ -94,10 +87,10 @@ let lastFilter: any = undefined
 const pondData = computed(() => {
   const selectId = targetData.value.request.requestDataPondId
   if (!selectId) return undefined
-  const data = requestDataPond.value.filter(item => {
-    return selectId === item.dataPondId
+  const data = socketDataPond.value.filter(item => {
+    return selectId === item.dataSocketId
   })
-  console.log(requestDataPond.value, 'data')
+  console.log(socketDataPond.value, 'data')
   return data[0]
 })
 
@@ -111,44 +104,34 @@ const controlModelHandle = () => {
   controlModel.value = true
 }
 
-let targetSocket: any
 // 发送请求
 const sendHandle = async () => {
   if (!targetData.value?.request) {
     window.$message.warning('请选择一个公共接口！')
     return
   }
+  loading.value = true
   try {
-    console.log('连接测试')
-    targetSocket = new TargetSocket(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
-    targetSocket.connect(() => {
-      console.log('连接成功-----')
-      targetSocket.subscribe()
-    })
-    targetSocket.on((data: any) => {
-      console.log('监听2：', data)
-      if (data) {
-        targetData.value.option.dataset = newFunctionHandle(data?.data, data, targetData.value.filter)
+    const res = await customizeSocket(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
+    loading.value = false
+    if (res) {
+      if (!res?.data && !targetData.value.filter) {
+        window['$message'].warning('您的数据不符合默认格式，请配置过滤器！')
         showMatching.value = true
         return
       }
-      window['$message'].warning('没有拿到返回值，请检查接口！')
-    })
+      targetData.value.option.dataset = newFunctionHandle(res?.data, res, targetData.value.filter)
+      showMatching.value = true
+      return
+    }
+    window['$message'].warning('没有拿到返回值，请检查接口！')
   } catch (error) {
     console.error(error)
+    loading.value = false
     window['$message'].warning('数据异常，请检查参数！')
   }
 }
 
-// 断开连接
-const offHandle = () => {
-  console.log('断开')
-  if (!targetSocket) {
-    window['$message'].warning('请先连接！')
-    return
-  }
-  targetSocket.close()
-}
 watchEffect(() => {
   const filter = targetData.value?.filter
   if (lastFilter !== filter && firstFocus) {

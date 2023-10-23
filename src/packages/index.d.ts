@@ -1,6 +1,6 @@
 import { BaseEvent, EventLife, InteractEvents, InteractEventOn, InteractActionsType } from '@/enums/eventEnum'
 import type { GlobalThemeJsonType } from '@/settings/chartThemes/index'
-import type { RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import type { RequestConfigType, SocketConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
 
 export enum ChartFrameEnum {
   // 支持 dataset 的 echarts 框架
@@ -47,7 +47,7 @@ export type ConfigType = {
 
 // 数据请求
 interface requestConfig {
-  request: RequestConfigType
+  request: RequestConfigType | SocketConfigType
 }
 
 // Echarts 数据类型

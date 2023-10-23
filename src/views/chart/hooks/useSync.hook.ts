@@ -1,8 +1,13 @@
-import { onUnmounted } from 'vue';
+import { onUnmounted } from 'vue'
 import html2canvas from 'html2canvas'
 import { getUUID, httpErrorHandle, fetchRouteParamsLocation, base64toFile, JSONStringify, JSONParse } from '@/utils'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
-import { EditCanvasTypeEnum, ChartEditStoreEnum, ProjectInfoEnum, ChartEditStorage } from '@/store/modules/chartEditStore/chartEditStore.d'
+import {
+  EditCanvasTypeEnum,
+  ChartEditStoreEnum,
+  ProjectInfoEnum,
+  ChartEditStorage
+} from '@/store/modules/chartEditStore/chartEditStore.d'
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
 import { StylesSetting } from '@/components/Pages/ChartItemSetting'
 import { useSystemStore } from '@/store/modules/systemStore/systemStore'
@@ -130,7 +135,7 @@ export const useSync = () => {
       }
 
       if (e.isGroup) {
-        (e as CreateComponentGroupType).groupList.forEach(groupItem => {
+        ;(e as CreateComponentGroupType).groupList.forEach(groupItem => {
           intComponent(groupItem)
         })
       } else {
@@ -209,7 +214,11 @@ export const useSync = () => {
             chartHistoryStore.clearForwardStack()
           }
         }
-      } else if (key === ChartEditStoreEnum.EDIT_CANVAS_CONFIG || key === ChartEditStoreEnum.REQUEST_GLOBAL_CONFIG) {
+      } else if (
+        key === ChartEditStoreEnum.EDIT_CANVAS_CONFIG ||
+        key === ChartEditStoreEnum.REQUEST_GLOBAL_CONFIG ||
+        key === ChartEditStoreEnum.REQUEST_SOCKET_GLOBAL_CONFIG
+      ) {
         componentMerge(chartEditStore[key], projectData[key], true)
       }
     }
@@ -224,10 +233,10 @@ export const useSync = () => {
    * @returns
    */
   const updateStoreInfo = (projectData: {
-    id: string,
-    projectName: string,
-    indexImage: string,
-    remarks: string,
+    id: string
+    projectName: string
+    indexImage: string
+    remarks: string
     state: number
   }) => {
     const { id, projectName, remarks, indexImage, state } = projectData
@@ -257,7 +266,7 @@ export const useSync = () => {
           // 更新全局数据
           await updateComponent(JSONParse(res.data.content))
           return
-        }else {
+        } else {
           chartEditStore.setProjectInfo(ProjectInfoEnum.PROJECT_ID, fetchRouteParamsLocation())
         }
         setTimeout(() => {
@@ -274,10 +283,10 @@ export const useSync = () => {
 
   // * 数据保存
   const dataSyncUpdate = throttle(async (updateImg = true) => {
-    if(!fetchRouteParamsLocation()) return
+    if (!fetchRouteParamsLocation()) return
 
-    let projectId = chartEditStore.getProjectInfo[ProjectInfoEnum.PROJECT_ID];
-    if(projectId === null || projectId === ''){
+    let projectId = chartEditStore.getProjectInfo[ProjectInfoEnum.PROJECT_ID]
+    if (projectId === null || projectId === '') {
       window['$message'].error('数据初未始化成功,请刷新页面！')
       return
     }
@@ -298,10 +307,13 @@ export const useSync = () => {
 
         // 上传预览图
         let uploadParams = new FormData()
-        uploadParams.append('object', base64toFile(canvasImage.toDataURL(), `${fetchRouteParamsLocation()}_index_preview.png`))
+        uploadParams.append(
+          'object',
+          base64toFile(canvasImage.toDataURL(), `${fetchRouteParamsLocation()}_index_preview.png`)
+        )
         const uploadRes = await uploadFile(uploadParams)
         // 保存预览图
-        if(uploadRes && uploadRes.code === ResultEnum.SUCCESS) {
+        if (uploadRes && uploadRes.code === ResultEnum.SUCCESS) {
           if (uploadRes.data.fileurl) {
             await updateProjectApi({
               id: fetchRouteParamsLocation(),
@@ -323,7 +335,7 @@ export const useSync = () => {
     let params = new FormData()
     params.append('projectId', projectId)
     params.append('content', JSONStringify(chartEditStore.getStorageInfo() || {}))
-    const res= await saveProjectApi(params)
+    const res = await saveProjectApi(params)
 
     if (res && res.code === ResultEnum.SUCCESS) {
       // 成功状态

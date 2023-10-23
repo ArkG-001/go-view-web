@@ -15,7 +15,7 @@
         </template>
       </n-button>
       <n-divider style="margin: 10px 0"></n-divider>
-      <n-space v-if="!requestDataPond.length" justify="center">
+      <n-space v-if="!socketDataPond.length" justify="center">
         <n-text class="not-layer-text" :depth="3">
           暂无数据内容，
           <n-a @click="createPond">立即创建</n-a>
@@ -23,28 +23,28 @@
       </n-space>
       <n-scrollbar style="max-height: 490px">
         <div
-          v-for="item in requestDataPond"
-          :key="item.dataPondId"
-          :class="{ select: item.dataPondId === selectPondId }"
+          v-for="item in socketDataPond"
+          :key="item.dataSocketId"
+          :class="{ select: item.dataSocketId === selectPondId }"
           class="pond-item"
           @click="clickHandle(item)"
         >
           <div class="item-content">
             <div class="item-content-body">
               <div>
-                <n-tag class="go-mr-1" :type="item.dataPondId === selectPondId ? 'warning' : ''" :bordered="false">
+                <n-tag class="go-mr-1" :type="item.dataSocketId === selectPondId ? 'warning' : ''" :bordered="false">
                   名称
                 </n-tag>
                 <n-ellipsis style="max-width: 180px">
-                  {{ item.dataPondName || '暂无' }}
+                  {{ item.dataSocketName || '暂无' }}
                 </n-ellipsis>
               </div>
               <div>
-                <n-tag class="go-mr-1" :type="item.dataPondId === selectPondId ? 'warning' : ''" :bordered="false">
+                <n-tag class="go-mr-1" :type="item.dataSocketId === selectPondId ? 'warning' : ''" :bordered="false">
                   标识
                 </n-tag>
                 <n-ellipsis style="max-width: 180px">
-                  {{ item.dataPondRequestConfig.socketEventName || '暂无' }}
+                  {{ item.dataSocketRequestConfig.eventName || '暂无' }}
                 </n-ellipsis>
               </div>
             </div>
@@ -54,7 +54,7 @@
               </n-icon>
             </div>
           </div>
-          <div :class="{ 'select-modal': item.dataPondId === selectPondId }"></div>
+          <div :class="{ 'select-modal': item.dataSocketId === selectPondId }"></div>
         </div>
       </n-scrollbar>
     </div>
@@ -65,7 +65,7 @@
 import { toRefs, computed } from 'vue'
 import { useTargetData } from '@/views/chart/ContentConfigurations/components/hooks/useTargetData.hook'
 import { useDesignStore } from '@/store/modules/designStore/designStore'
-import { RequestDataPondItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import { RequestDataSocketItemType } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { icon } from '@/plugins'
 
 const emit = defineEmits(['createPond', 'deletePond'])
@@ -73,7 +73,7 @@ const emit = defineEmits(['createPond', 'deletePond'])
 const { DuplicateOutlineIcon, TrashIcon } = icon.ionicons5
 const designStore = useDesignStore()
 const { chartEditStore, targetData } = useTargetData()
-const { requestDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
+const { socketDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
 
 // 选中的全局数据
 const selectPondId = computed(() => {
@@ -91,15 +91,15 @@ const createPond = () => {
 }
 
 // 删除数据池
-const deletePond = (target: Event, targetData: RequestDataPondItemType) => {
+const deletePond = (target: Event, targetData: RequestDataSocketItemType) => {
   target.stopPropagation()
   target.preventDefault()
   emit('deletePond', targetData)
 }
 
 // 选中
-const clickHandle = (item: RequestDataPondItemType) => {
-  targetData.value.request.requestDataPondId = item.dataPondId
+const clickHandle = (item: RequestDataSocketItemType) => {
+  targetData.value.request.requestDataPondId = item.dataSocketId
 }
 </script>
 
