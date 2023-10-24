@@ -111,19 +111,6 @@ import { StorageEnum } from '@/enums/storageEnum'
 import { icon } from '@/plugins'
 import { routerTurnByName } from '@/utils'
 import { loginApi } from '@/api/path'
-import { useTargetData } from '@/views/chart/ContentConfigurations/components/hooks/useTargetData.hook'
-import { UseSocketHook } from '@/hooks'
-import { toRefs } from 'vue'
-
-const { chartEditStore, targetData } = useTargetData()
-
-const socketInstance = toRefs(chartEditStore.getSocketInstance) as any
-
-// 连接websocket
-socketInstance.value = new UseSocketHook('message', 'ws://47.103.75.123:9200')
-socketInstance.value.connect(() => {
-  console.log('websocket连接成功')
-})
 
 interface FormState {
   username: string

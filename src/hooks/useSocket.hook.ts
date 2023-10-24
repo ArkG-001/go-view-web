@@ -11,14 +11,27 @@ export class UseSocketHook {
     }
   }
 
+  // 连接
   public connect(callback: (...args: any[]) => void) {
     this.socket.on('connect', callback)
   }
 
+  public getListeners = () => {
+    return this.socket.listenersAnyOutgoing()
+  }
+
+  // public unConnect(callback: (...args: any[]) => void) {
+  //   this.socket.off('connect', callback)
+  //   // then, later
+  //   this.socket.offAny(myListener)
+  // }
+
+  // 订阅
   public subscribe() {
     this.socket.emit('subscribe', this.socketEventName)
   }
 
+  // 关闭连接
   public close() {
     this.socket.close()
     console.log('socket已关闭')
@@ -29,6 +42,7 @@ export class UseSocketHook {
     this.socket.on('disconnect', callback)
   }
 
+  // 取消订阅
   public unsubscribe(channel: string) {
     this.socket.emit('unsubscribe', channel)
   }

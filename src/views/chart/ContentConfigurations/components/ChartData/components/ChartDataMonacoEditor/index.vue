@@ -133,17 +133,9 @@ const fetchTargetData = async () => {
   try {
     let res
     if (requestDataType.value === 3) {
-      socketInstance.value = new TargetSocket(
-        toRaw(targetData.value.request),
-        toRaw(chartEditStore.getRequestGlobalConfig)
-      )
-      socketInstance.value.connect(() => {
-        console.log('连接成功-----3')
-        socketInstance.value.subscribe()
-      })
       socketInstance.value.on((data: any) => {
+        if (!targetData.value) return
         console.log('监听3：', data)
-        console.log(targetData.value.request.socketFilterKey, 'targetData')
         const key = targetData.value.request.socketFilterKey
         const val = targetData.value.request.socketFilterValue
         const res = JSON.parse(data)

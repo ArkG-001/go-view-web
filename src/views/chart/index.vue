@@ -14,7 +14,7 @@
         </template>
       </layout-header-pro>
       <n-layout-content content-style="overflow:hidden; display: flex">
-        <div style="overflow:hidden; display: flex">
+        <div style="overflow: hidden; display: flex">
           <content-charts></content-charts>
           <content-layers></content-layers>
         </div>
@@ -44,9 +44,20 @@ import { LayoutHeaderPro } from '@/layout/components/LayoutHeaderPro'
 import { useContextMenu } from './hooks/useContextMenu.hook'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
+import { toRefs } from 'vue'
+import { UseSocketHook } from '@/hooks'
 
 const chartHistoryStoreStore = useChartHistoryStore()
 const chartEditStore = useChartEditStore()
+
+const { socketInstance } = toRefs(chartEditStore) as any
+// 连接websocket
+socketInstance.value = new UseSocketHook('92117060382', 'ws://47.103.75.123:9200')
+console.log(socketInstance.value, 'socketInstance.value')
+socketInstance.value.connect(() => {
+  console.log('websocket连接成功')
+  socketInstance.value.subscribe()
+})
 
 // 记录初始化
 chartHistoryStoreStore.canvasInit(chartEditStore.getEditCanvas)
@@ -60,19 +71,14 @@ const ContentConfigurations = loadAsyncComponent(() => import('./ContentConfigur
 const ContentLoad = loadAsyncComponent(() => import('./ContentLoad/index.vue'))
 
 // 右键
-const {
-  menuOptions,
-  onClickOutSide,
-  mousePosition,
-  handleMenuSelect
-} = useContextMenu()
+const { menuOptions, onClickOutSide, mousePosition, handleMenuSelect } = useContextMenu()
 </script>
 
 <style lang="scss" scoped>
-@include go("chart") {
+@include go('chart') {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  @include background-image("background-image");
+  @include background-image('background-image');
 }
 </style>

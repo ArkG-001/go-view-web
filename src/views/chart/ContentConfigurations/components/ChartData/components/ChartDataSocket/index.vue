@@ -119,18 +119,9 @@ const sendHandle = async () => {
     return
   }
   try {
-    console.log('连接测试')
-    socketInstance.value = new TargetSocket(
-      toRaw(targetData.value.request),
-      toRaw(chartEditStore.getRequestGlobalConfig)
-    )
-    socketInstance.value.connect(() => {
-      console.log('连接成功-----')
-      window['$message'].success('连接成功！')
-      socketInstance.value.subscribe()
-    })
-
+    console.log('连接测试', targetData.value)
     socketInstance.value.on((data: any) => {
+      if (!targetData.value) return
       const key = targetData.value?.request?.socketFilterKey
       const val = targetData.value?.request?.socketFilterValue
       const res = JSON.parse(data)
@@ -145,11 +136,6 @@ const sendHandle = async () => {
       } else if (!res) {
         window['$message'].warning('没有拿到返回值，请检查接口！')
       }
-    })
-    socketInstance.value.onDisconnect(() => {
-      console.log('断开连接')
-      window['$message'].success('断开连接成功!')
-      socketInstance.value = undefined
     })
   } catch (error) {
     console.error(error)
