@@ -60,6 +60,7 @@
               </template>
               下载
             </n-button>
+
             <n-tooltip trigger="hover">
               <template #trigger>
                 <n-icon class="go-ml-1" size="21" :depth="3">
@@ -170,6 +171,7 @@ watch(
       dimensions: any
     } | null
   ) => {
+    console.log(newData, 'source.value')
     if (newData && targetData?.value?.chartConfig?.chartFrame === ChartFrameEnum.ECHARTS) {
       // 只有 DataSet 数据才有对应的格式
       source.value = newData

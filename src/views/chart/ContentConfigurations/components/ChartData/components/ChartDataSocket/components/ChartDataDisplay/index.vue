@@ -39,6 +39,12 @@
               </template>
             </n-input>
           </setting-item-box>
+          <setting-item-box name="过滤键" :alone="true">
+            <n-input size="small" :placeholder="socketFilterKey || '暂无'" :disabled="true"> </n-input>
+          </setting-item-box>
+          <setting-item-box name="过滤值" :alone="true">
+            <n-input size="small" :placeholder="socketFilterValue || '暂无'" :disabled="true"> </n-input>
+          </setting-item-box>
         </div>
         <n-divider />
       </div>
@@ -59,9 +65,8 @@ const props = defineProps({
 })
 
 const { HelpOutlineIcon, FlashIcon, PulseIcon } = icon.ionicons5
-const { requestInterval, requestParams, requestIntervalUnit, socketEventName } = toRefs(
-  (props.targetData as RequestDataPondItemType).dataPondRequestConfig
-)
+const { requestInterval, requestParams, requestIntervalUnit, socketEventName, socketFilterKey, socketFilterValue } =
+  toRefs((props.targetData as RequestDataPondItemType).dataPondRequestConfig)
 
 const tabs = [RequestParamsTypeEnum.HEADER]
 const tabValue = ref<RequestParamsTypeEnum>(RequestParamsTypeEnum.PARAMS)

@@ -214,11 +214,7 @@ export const useSync = () => {
             chartHistoryStore.clearForwardStack()
           }
         }
-      } else if (
-        key === ChartEditStoreEnum.EDIT_CANVAS_CONFIG ||
-        key === ChartEditStoreEnum.REQUEST_GLOBAL_CONFIG ||
-        key === ChartEditStoreEnum.REQUEST_SOCKET_GLOBAL_CONFIG
-      ) {
+      } else if (key === ChartEditStoreEnum.EDIT_CANVAS_CONFIG || key === ChartEditStoreEnum.REQUEST_GLOBAL_CONFIG) {
         componentMerge(chartEditStore[key], projectData[key], true)
       }
     }

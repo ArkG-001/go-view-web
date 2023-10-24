@@ -53,6 +53,7 @@ export class TargetSocket {
 
   public close() {
     this.socket.close()
+    console.log('socket已关闭')
   }
 
   // 断开连接时触发

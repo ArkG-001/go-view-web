@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, toRaw, onBeforeUnmount, computed, watchEffect } from 'vue'
+import { ref, toRefs, toRaw, onBeforeUnmount, computed, watchEffect, watch } from 'vue'
 import { icon } from '@/plugins'
 import { TargetSocket } from '@/api/socket'
 import { SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
@@ -82,7 +82,7 @@ const { HelpOutlineIcon, FlashIcon, PulseIcon, FishIcon } = icon.ionicons5
 const { targetData, chartEditStore } = useTargetData()
 
 const { requestDataPond } = toRefs(chartEditStore.getRequestGlobalConfig)
-const { socketInstance } = toRefs(chartEditStore) as any
+const { socketInstance, targetChart } = toRefs(chartEditStore) as any
 
 const loading = ref(false)
 const controlModel = ref(false)
@@ -129,14 +129,22 @@ const sendHandle = async () => {
       window['$message'].success('连接成功！')
       socketInstance.value.subscribe()
     })
+
     socketInstance.value.on((data: any) => {
-      console.log('监听2：', data)
-      if (data) {
-        targetData.value.option.dataset = newFunctionHandle(data, data, targetData.value.filter)
+      const key = targetData.value?.request?.socketFilterKey
+      const val = targetData.value?.request?.socketFilterValue
+      const res = JSON.parse(data)
+      console.log('监听2：', res, key, val)
+      if (res && res[key] === val) {
+        console.log('监听是需要的值：', res)
+        targetData.value.option.dataset = newFunctionHandle(res, res, targetData.value.filter)
+        console.log(targetData.value.option.dataset, 'targetData.value.option.dataset1')
+        console.log(targetData.value.filter, 'targetData.value.option.dataset2')
         showMatching.value = true
         return
+      } else if (!res) {
+        window['$message'].warning('没有拿到返回值，请检查接口！')
       }
-      window['$message'].warning('没有拿到返回值，请检查接口！')
     })
     socketInstance.value.onDisconnect(() => {
       console.log('断开连接')
@@ -148,6 +156,16 @@ const sendHandle = async () => {
     window['$message'].warning('数据异常，请检查参数！')
   }
 }
+
+// 监听未选中时关闭websocket
+watch(
+  () => targetChart.value?.selectId,
+  (newData: any) => {
+    if (targetData.value?.id && !newData.includes(targetData.value.id)) {
+      socketInstance.value.close()
+    }
+  }
+)
 
 // 断开连接
 const offHandle = () => {

@@ -114,9 +114,10 @@ const { DocumentTextIcon } = icon.ionicons5
 const { FilterIcon, FilterEditIcon } = icon.carbon
 const { targetData, chartEditStore } = useTargetData()
 const { requestDataType } = toRefs(targetData.value.request)
+
 const { requestOriginUrl } = toRefs(chartEditStore.getRequestGlobalConfig)
 console.log(requestDataType, 'requestDataType')
-const { socketInstance } = toRefs(chartEditStore) as any
+const { socketInstance, targetChart } = toRefs(chartEditStore) as any
 
 // 受控弹窗
 const showModal = ref(false)
@@ -142,7 +143,13 @@ const fetchTargetData = async () => {
       })
       socketInstance.value.on((data: any) => {
         console.log('监听3：', data)
-        sourceData.value = JSON.parse(data)
+        console.log(targetData.value.request.socketFilterKey, 'targetData')
+        const key = targetData.value.request.socketFilterKey
+        const val = targetData.value.request.socketFilterValue
+        const res = JSON.parse(data)
+        if (!key || !val) return
+        if (res[key] !== val) return
+        sourceData.value = res
       })
     } else {
       res = await customizeHttp(toRaw(targetData.value.request), toRaw(chartEditStore.getRequestGlobalConfig))
@@ -157,6 +164,16 @@ const fetchTargetData = async () => {
     window['$message'].warning('数据异常，请检查参数！')
   }
 }
+
+// 监听未选中时关闭websocket
+watch(
+  () => targetChart.value?.selectId,
+  (newData: any) => {
+    if (targetData.value?.id && !newData.includes(targetData.value.id)) {
+      socketInstance.value.close()
+    }
+  }
+)
 
 // 过滤结果
 const filterRes = computed(() => {

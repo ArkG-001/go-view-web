@@ -243,24 +243,6 @@ export interface RequestConfigType extends RequestPublicConfigType {
   socketFilterValue?: string
 }
 
-// socket 请求配置
-export type RequestDataSocketItemType = {
-  dataSocketId: string,
-  dataSocketName: string,
-  dataSocketRequestConfig: SocketConfigType
-}
-
-export type RequestSocketGlobalConfigType = {
-  // 请求源地址
-  requestOriginUrl?: string
-  // 组件定制轮询时间
-  requestInterval: number
-  // 时间单位（时分秒）
-  requestIntervalUnit: RequestHttpIntervalEnum
-  // 公共数据池
-  requestDataSocket: RequestDataSocketItemType[]
-}
-
 // Store 类型
 export interface ChartEditStoreType {
   [ChartEditStoreEnum.PROJECT_INFO]: ProjectInfoType
