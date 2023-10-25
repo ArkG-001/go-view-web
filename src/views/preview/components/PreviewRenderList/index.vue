@@ -67,26 +67,26 @@ const { componentList, socketInstance } = toRefs(chartEditStore) as any
 console.log(componentList.value, 'componentList')
 
 socketInstance.value.on((data: any) => {
-  // console.log(data, 'data')
-  componentList.value.forEach((item: any) => {
-    if (item.request.requestDataType === RequestDataTypeEnum.SOCKET) {
-      console.log(item, 'item')
-      if (!item) return
+  console.log(JSON.parse(data), 'data')
+  setDateset(componentList.value, data)
+})
 
-      // item.option.dataset =
+const setDateset = (componentList: Array<object>, data: any) => {
+  componentList.forEach((item: any) => {
+    if (item.isGroup) {
+      setDateset(item.groupList, data)
+    }
+    if (item.request.requestDataType === RequestDataTypeEnum.SOCKET) {
+      if (!item) return
       const key = item.request?.socketFilterKey
       const val = item.request?.socketFilterValue
       const res = JSON.parse(data)
-      console.log('监听2：', res, key, val)
       if (res && res[key] === val) {
-        console.log('监听是需要的值：', res)
         item.option.dataset = newFunctionHandle(res, res, item.filter)
-        console.log(item.option.dataset, 'item.option.dataset1')
-        console.log(item.filter, 'item.option.dataset2')
       }
     }
   })
-})
+}
 // const props = defineProps({
 //   localStorageInfo: {
 //     type: Object as PropType<ChartEditStorageType>,

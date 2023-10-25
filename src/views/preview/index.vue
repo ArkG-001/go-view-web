@@ -23,7 +23,7 @@ watch(
     socketInstance.value.disconnect()
     socketInstance.value = new UseSocketHook(newVal.subscribeChannel, newVal.socketOriginUrl)
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 if (socketInstance.value) {
   socketInstance.value.connect(() => {

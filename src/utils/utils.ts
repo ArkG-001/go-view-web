@@ -191,7 +191,6 @@ export const newFunctionHandle = (
   successCallBack?: Function
 ) => {
   try {
-    console.log(funcStr, 'targetData.value.option.dataset-fun')
     if (!funcStr) return data
     const fn = new Function('data', 'res', funcStr)
     const fnRes = fn(cloneDeep(data), cloneDeep(res))
