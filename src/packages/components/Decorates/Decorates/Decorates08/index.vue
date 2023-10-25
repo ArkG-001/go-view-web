@@ -3,30 +3,23 @@
     <svg xmlns="http://www.w3.org/2000/svg" :width="w" :height="h">
       <polyline
         class="g-rect-path stroke fill-none"
-        :points="`16.5, ${((h - 33) * (4 - longerHeight)) / 4 + 40} 16.5,${h - 16.5} ${w - 16.5},${h - 16.5} ${
-          w - 16.5
-        },${((h - 33) * (4 - shorterHeight)) / 4 + 40}`"
+        :points="`7, ${((h - 7) * (4 - longerHeight)) / 4 + 20} 7,${h - 7} ${w - 7},${h - 7} ${w - 7},${
+          ((h - 7) * (4 - shorterHeight)) / 4 + 20
+        }`"
       />
       <polyline
         class="g-rect-fill dot1111"
-        :points="`16.5, ${((h - 33) * (4 - longerHeight)) / 4 + 40}  16.5,${h - 16.5} ${w - 16.5},${h - 16.5} ${
-          w - 16.5
-        },${((h - 33) * (4 - shorterHeight)) / 4 + 40}`"
+        :points="`7, ${((h - 7) * (4 - longerHeight)) / 4 + 20}  7,${h - 7} ${w - 7},${h - 7} ${w - 7},${
+          ((h - 7) * (4 - shorterHeight)) / 4 + 20
+        }`"
         stroke="#fff"
       />
+      <circle class="fill" cx="7" :cy="((h - 7) * (4 - longerHeight)) / 4 + 20" r="3" stroke="none" fill="#5eacff" />
       <circle
         class="fill"
-        cx="16.5"
-        :cy="((h - 33) * (4 - longerHeight)) / 4 + 40"
-        r="6"
-        stroke="none"
-        fill="#5eacff"
-      />
-      <circle
-        class="fill"
-        :cx="w - 16.5"
-        :cy="((h - 33) * (4 - shorterHeight)) / 4 + 40"
-        r="6"
+        :cx="w - 7"
+        :cy="((h - 7) * (4 - shorterHeight)) / 4 + 20"
+        r="3"
         stroke="none"
         fill="#5eacff"
       />

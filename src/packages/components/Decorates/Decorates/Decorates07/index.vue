@@ -4,17 +4,17 @@
       <polyline
         style="fill: none; stroke-width: 3; stroke-opacity: 0.5"
         class="stroke"
-        :points="`16.5 ${h - 16.5},12.5 40,${w - 16.5} 40`"
+        :points="`7 ${h - 7},7 7,${w - 7} 7`"
       />
-      <circle class="fill" cx="15.5" :cy="h - 20" r="6" stroke="black" fill="#5eacff" />
+      <circle class="fill" cx="7" :cy="h - 7" r="3" stroke="none" fill="#5eacff" />
     </svg>
     <svg v-if="direction === 'down'" xmlns="http://www.w3.org/2000/svg" :width="w" :height="h">
       <polyline
         style="fill: none; stroke-width: 3; stroke-opacity: 0.5"
         class="stroke"
-        :points="`16.5 40,16.5  ${h - 40},${w - 16.5} ${h - 40}`"
+        :points="`7 7,7 ${h - 7},${w - 7} ${h - 7}`"
       />
-      <circle class="fill" cx="15.5" :cy="40" r="6" stroke="black" fill="#5eacff" />
+      <circle class="fill" cx="7" :cy="7" r="3" stroke="none" fill="#5eacff" />
     </svg>
   </div>
 </template>
