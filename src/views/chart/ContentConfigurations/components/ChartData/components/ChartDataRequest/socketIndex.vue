@@ -7,7 +7,6 @@
         <div class="go-pr-3">
           <n-space vertical>
             <socket-global-config></socket-global-config>
-            <!--              :target-data-request="targetDataRequest?.dataPondRequestConfig"-->
             <socket-target-config
               :target-data-request="targetDataRequest?.dataPondRequestConfig"
             ></socket-target-config>

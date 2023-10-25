@@ -33,18 +33,18 @@
             <div class="item-content-body">
               <div>
                 <n-tag class="go-mr-1" :type="item.dataPondId === selectPondId ? 'warning' : ''" :bordered="false">
-                  名称
+                  过滤键
                 </n-tag>
                 <n-ellipsis style="max-width: 180px">
-                  {{ item.dataPondName || '暂无' }}
+                  {{ item.dataPondRequestConfig.socketFilterKey || '暂无' }}
                 </n-ellipsis>
               </div>
               <div>
                 <n-tag class="go-mr-1" :type="item.dataPondId === selectPondId ? 'warning' : ''" :bordered="false">
-                  标识
+                  过滤值
                 </n-tag>
                 <n-ellipsis style="max-width: 180px">
-                  {{ item.dataPondRequestConfig.socketEventName || '暂无' }}
+                  {{ item.dataPondRequestConfig.socketFilterValue || '暂无' }}
                 </n-ellipsis>
               </div>
             </div>

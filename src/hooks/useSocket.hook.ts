@@ -1,13 +1,18 @@
 import { io, Socket } from 'socket.io-client'
 export class UseSocketHook {
   socket: Socket
-  socketEventName: string
+  subscribeChannel: string
 
   constructor(socketEventName: string, socketOriginUrl: string) {
-    this.socket = io(socketOriginUrl || '')
-    this.socketEventName = socketEventName || ''
+    this.socket = io(socketOriginUrl)
+    this.subscribeChannel = socketEventName
     if (!socketOriginUrl) {
+      console.log('URL地址格式有误!')
       return window['$message'].error('URL地址格式有误!')
+    }
+    if (!socketEventName) {
+      console.log('频道格式有误!')
+      return window['$message'].error('频道格式有误!')
     }
   }
 
@@ -26,9 +31,13 @@ export class UseSocketHook {
   //   this.socket.offAny(myListener)
   // }
 
+  public disconnect() {
+    this.socket.disconnect()
+  }
+
   // 订阅
   public subscribe() {
-    this.socket.emit('subscribe', this.socketEventName)
+    this.socket.emit('subscribe', this.subscribeChannel)
   }
 
   // 关闭连接
@@ -48,7 +57,7 @@ export class UseSocketHook {
   }
 
   public on(callback: (...args: any[]) => void) {
-    this.socket.on(this.socketEventName, callback)
+    this.socket.on(this.subscribeChannel, callback)
   }
 
   public emit(channel: string, data: any) {

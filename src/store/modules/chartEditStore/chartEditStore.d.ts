@@ -211,6 +211,8 @@ export interface RequestGlobalConfigType extends RequestPublicConfigType {
   requestOriginUrl?: string
   // socket源地址
   socketOriginUrl?: string
+  // socket订阅频道
+  subscribeChannel?: string
   // 公共数据池
   requestDataPond: RequestDataPondItemType[]
 }
@@ -235,8 +237,6 @@ export interface RequestConfigType extends RequestPublicConfigType {
   requestSQLContent: {
     sql: string
   }
-  // socket 事件名
-  socketEventName?: string
   // socket 过滤键
   socketFilterKey?: string
   // socket 过滤值

@@ -10,8 +10,12 @@
         </n-input>
       </setting-item-box>
 
-      <setting-item-box name="接口地址" :alone="true">
-        <n-input size="small" :placeholder="pondData?.dataPondRequestConfig.requestUrl || '暂无'" :disabled="true">
+      <setting-item-box name="过滤值" :alone="true">
+        <n-input
+          size="small"
+          :placeholder="pondData?.dataPondRequestConfig.socketFilterValue || '暂无'"
+          :disabled="true"
+        >
           <template #prefix>
             <n-icon :component="FlashIcon" />
           </template>
@@ -45,14 +49,6 @@
         </n-icon>
       </template>
       连接测试
-    </n-button>
-    <n-button type="primary" ghost @click="offHandle">
-      <template #icon>
-        <n-icon>
-          <flash-icon />
-        </n-icon>
-      </template>
-      断开连接
     </n-button>
   </setting-item-box>
 
@@ -143,25 +139,6 @@ const sendHandle = async () => {
   }
 }
 
-// 监听未选中时关闭websocket
-watch(
-  () => targetChart.value?.selectId,
-  (newData: any) => {
-    if (targetData.value?.id && !newData.includes(targetData.value.id)) {
-      socketInstance.value.close()
-    }
-  }
-)
-
-// 断开连接
-const offHandle = () => {
-  console.log('断开')
-  if (!socketInstance.value) {
-    window['$message'].warning('请先连接！')
-    return
-  }
-  socketInstance.value.close()
-}
 watchEffect(() => {
   const filter = targetData.value?.filter
   if (lastFilter !== filter && firstFocus) {

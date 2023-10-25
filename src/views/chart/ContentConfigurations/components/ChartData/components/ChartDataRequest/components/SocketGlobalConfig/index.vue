@@ -45,6 +45,33 @@
         编辑配置
       </n-button>
     </setting-item-box>
+    <setting-item-box
+      :itemRightStyle="{
+        gridTemplateColumns: '6fr 2fr'
+      }"
+      style="padding-right: 25px"
+    >
+      <template #name>
+        频道
+        <n-tooltip trigger="hover" v-if="isDev()">
+          <template #trigger>
+            <n-icon size="21" :depth="3">
+              <help-outline-icon></help-outline-icon>
+            </n-icon>
+          </template>
+          <ul class="go-pl-0">
+            一般情况下，填入设备SN号，用于区分不同设备的数据
+          </ul>
+        </n-tooltip>
+      </template>
+      <setting-item>
+        <n-input-group>
+          <n-input v-model:value.trim="subscribeChannel" :disabled="editDisabled" :min="1" placeholder="请输入订阅频道">
+          </n-input>
+        </n-input-group>
+        <!-- 组件url -->
+      </setting-item>
+    </setting-item-box>
   </n-card>
 </template>
 
@@ -56,10 +83,15 @@ import { useTargetData } from '@/views/chart/ContentConfigurations/components/ho
 import { selectTypeOptions, selectTimeOptions } from '@/views/chart/ContentConfigurations/components/ChartData/index.d'
 import { RequestGlobalHeaderTable } from '../RequestGlobalHeaderTable'
 import { icon } from '@/plugins'
+import { isDev } from '@/utils'
+
+const { HelpOutlineIcon } = icon.ionicons5
 
 const { PencilIcon, ChevronDownOutlineIcon, ChevronUpOutlineIcon } = icon.ionicons5
 const { chartEditStore } = useTargetData()
-const { requestInterval, requestIntervalUnit, socketOriginUrl } = toRefs(chartEditStore.requestGlobalConfig)
+const { requestInterval, requestIntervalUnit, socketOriginUrl, subscribeChannel } = toRefs(
+  chartEditStore.requestGlobalConfig
+)
 const editDisabled = ref(true)
 
 const designStore = useDesignStore()

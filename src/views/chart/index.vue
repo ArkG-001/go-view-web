@@ -44,21 +44,34 @@ import { LayoutHeaderPro } from '@/layout/components/LayoutHeaderPro'
 import { useContextMenu } from './hooks/useContextMenu.hook'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
-import { toRefs } from 'vue'
+import { toRefs, watch } from 'vue'
 import { UseSocketHook } from '@/hooks'
 
 const chartHistoryStoreStore = useChartHistoryStore()
 const chartEditStore = useChartEditStore()
 
-const { socketInstance } = toRefs(chartEditStore) as any
+const { socketInstance, requestGlobalConfig } = toRefs(chartEditStore) as any
 // 连接websocket
-socketInstance.value = new UseSocketHook('92117060382', 'ws://47.103.75.123:9200')
-console.log(socketInstance.value, 'socketInstance.value')
-socketInstance.value.connect(() => {
-  console.log('websocket连接成功')
-  socketInstance.value.subscribe()
-})
+socketInstance.value = new UseSocketHook(
+  requestGlobalConfig.value.subscribeChannel,
+  requestGlobalConfig.value.socketOriginUrl
+)
 
+watch(
+  () => requestGlobalConfig.value,
+  newVal => {
+    socketInstance.value.disconnect()
+    socketInstance.value = new UseSocketHook(newVal.subscribeChannel, newVal.socketOriginUrl)
+  },
+  { deep: true }
+)
+if (socketInstance.value) {
+  console.log(socketInstance.value, 'socketInstance.value')
+  socketInstance.value.connect(() => {
+    console.log('websocket连接成功')
+    socketInstance.value.subscribe()
+  })
+}
 // 记录初始化
 chartHistoryStoreStore.canvasInit(chartEditStore.getEditCanvas)
 

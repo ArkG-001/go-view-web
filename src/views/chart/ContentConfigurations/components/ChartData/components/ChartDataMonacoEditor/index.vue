@@ -157,16 +157,6 @@ const fetchTargetData = async () => {
   }
 }
 
-// 监听未选中时关闭websocket
-watch(
-  () => targetChart.value?.selectId,
-  (newData: any) => {
-    if (targetData.value?.id && !newData.includes(targetData.value.id)) {
-      socketInstance.value.close()
-    }
-  }
-)
-
 // 过滤结果
 const filterRes = computed(() => {
   try {
