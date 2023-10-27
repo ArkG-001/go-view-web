@@ -65,7 +65,6 @@
 <script setup lang="ts">
 import { ref, toRefs, toRaw, onBeforeUnmount, computed, watchEffect, watch } from 'vue'
 import { icon } from '@/plugins'
-import { TargetSocket } from '@/api/socket'
 import { SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { ChartDataSocketControl } from './components/ChartDataSocketControl'
 import { useDesignStore } from '@/store/modules/designStore/designStore'

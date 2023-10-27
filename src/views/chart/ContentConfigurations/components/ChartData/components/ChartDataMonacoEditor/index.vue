@@ -107,7 +107,6 @@ import { MonacoEditor } from '@/components/Pages/MonacoEditor'
 import { icon } from '@/plugins'
 import { goDialog, newFunctionHandle, toString } from '@/utils'
 import { customizeHttp } from '@/api/http'
-import { TargetSocket } from '@/api/socket'
 import cloneDeep from 'lodash/cloneDeep'
 
 const { DocumentTextIcon } = icon.ionicons5

@@ -145,7 +145,7 @@ export const useChartEditStore = defineStore({
       requestDataPond: [],
       requestOriginUrl: '',
       subscribeChannel: 'message',
-      socketOriginUrl: 'ws://192.168.2.158:6200',
+      socketOriginUrl: 'ws://47.103.75.123:9200',
       requestInterval: requestInterval,
       requestIntervalUnit: requestIntervalUnit,
       requestParams: {
