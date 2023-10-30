@@ -41,6 +41,10 @@ const packagesListObj = {
   [PackagesCategoryEnum.ICONS]: {
     icon: renderIcon(AirPlaneOutlineIcon),
     label: PackagesCategoryName.ICONS
+  },
+  [PackagesCategoryEnum.FormEngine]: {
+    icon: renderIcon(AirPlaneOutlineIcon),
+    label: PackagesCategoryName.FORMENGINE
   }
 }
 

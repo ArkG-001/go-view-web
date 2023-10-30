@@ -13,8 +13,4 @@ const themeColor = ref(designStore.getAppTheme)
 const { setItem } = useChartLayoutStore()
 const { getCharts } = toRefs(useChartLayoutStore())
 
-export {
-  themeColor,
-  setItem,
-  getCharts
-}
+export { themeColor, setItem, getCharts }
