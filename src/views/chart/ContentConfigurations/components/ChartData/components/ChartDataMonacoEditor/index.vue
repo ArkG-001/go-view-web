@@ -44,14 +44,34 @@
       <template #header-extra> </template>
       <n-space size="small" vertical>
         <n-space justify="space-between">
+          <!--          <div>-->
+          <!--            <n-space vertical>-->
+          <!--              <n-tag type="info">-->
+          <!--                <span class="func-keyword">function</span>&nbsp;&nbsp;filter(data, res)&nbsp;&nbsp;{-->
+          <!--              </n-tag>-->
+          <!--              <monaco-editor v-model:modelValue="filter" width="460px" height="380px" language="javascript" />-->
+          <!--              <n-tag type="info">}</n-tag>-->
+          <!--            </n-space>-->
+          <!--          </div>-->
           <div>
-            <n-space vertical>
-              <n-tag type="info">
-                <span class="func-keyword">function</span>&nbsp;&nbsp;filter(data, res)&nbsp;&nbsp;{
-              </n-tag>
-              <monaco-editor v-model:modelValue="filter" width="460px" height="380px" language="javascript" />
-              <n-tag type="info">}</n-tag>
-            </n-space>
+            <n-input
+              v-model:value="filterValue"
+              :on-input="handleFilterChange"
+              clearable
+              type="text"
+              placeholder="请输入点位名称过滤"
+            />
+            <n-data-table
+              ref="dataTableRef"
+              max-height="380px"
+              style="max-width: 460px; margin-top: 8px"
+              :row-key="row => row.k"
+              virtual-scroll
+              v-model:checked-row-keys="checkedRowKeys"
+              @update:checked-row-keys="handleCheck"
+              :columns="columns"
+              :data="tableData"
+            />
           </div>
           <n-divider vertical style="height: 480px" />
           <n-scrollbar style="max-height: 480px">
@@ -108,6 +128,7 @@ import { icon } from '@/plugins'
 import { goDialog, newFunctionHandle, toString } from '@/utils'
 import { customizeHttp } from '@/api/http'
 import cloneDeep from 'lodash/cloneDeep'
+import debounce from 'lodash/debounce'
 
 const { DocumentTextIcon } = icon.ionicons5
 const { FilterIcon, FilterEditIcon } = icon.carbon
@@ -221,6 +242,62 @@ watch(
     }
   }
 )
+
+// 表格数据
+const dataTableRef = ref<any>(null)
+const checkedRowKeys = ref([])
+const columns = [
+  {
+    type: 'selection',
+    multiple: false
+  },
+  {
+    title: '点位名称',
+    key: 'k',
+    width: 200,
+    defaultSortOrder: 'ascend',
+    sorter: 'default',
+    filter(value, row) {
+      console.log(value, 'value---1')
+      return ~row.k.indexOf(value)
+    }
+  },
+  {
+    title: '点位值',
+    key: 'v',
+    width: 200
+  }
+]
+
+const tableData = ref([])
+const handleCheck = (newData: any) => {
+  console.log(newData, 'newData---1')
+  checkedRowKeys.value = newData
+}
+watch(
+  () => sourceData.value,
+  newData => {
+    if (!newData) return
+    console.log(newData, 'newData')
+    console.log(newData?.data?.data?.workData, 'newData')
+    tableData.value = newData?.data?.data?.workData.map((item: any) => {
+      return {
+        k: item.k,
+        v: item.v
+      }
+    })
+    console.log(tableData.value, 'newData')
+  },
+  { deep: true }
+)
+// 表格过滤
+const filterValue = ref('')
+const handleFilterChange = debounce((value: string) => {
+  console.log('value---', value)
+  const filterArr = []
+  filterArr.push(value)
+  dataTableRef.value.filter({ k: filterArr })
+}, 300)
 </script>
 
 <style lang="scss" scoped>
