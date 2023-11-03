@@ -7,6 +7,9 @@ import { setupNaive, setupDirectives, setupCustomComponents, initFunction } from
 import { GoAppProvider } from '@/components/GoAppProvider/index'
 import { setHtmlTheme } from '@/utils'
 
+
+
+
 // 引入全局样式
 import '@/styles/pages/index.scss'
 // 引入动画

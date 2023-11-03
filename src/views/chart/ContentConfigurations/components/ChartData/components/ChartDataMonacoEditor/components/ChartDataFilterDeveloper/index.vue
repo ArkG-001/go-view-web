@@ -1,5 +1,5 @@
 <template>
-  <n-modal class="go-chart-data-monaco-editor" v-model:show="showModal" :mask-closable="false" :closeOnEsc="false">
+  <n-modal class="go-chart-data-monaco-editor" :show="showModal" :mask-closable="false" :closeOnEsc="false">
     <n-card :bordered="false" role="dialog" size="small" aria-modal="true" style="width: 1000px; height: 600px">
       <template #header>
         <n-space>

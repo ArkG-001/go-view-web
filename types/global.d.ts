@@ -8,6 +8,7 @@ interface Window {
   // 键盘按键记录
   $KeyboardActive?: { [T: string]: boolean }
   onKeySpacePressHold?: Function
+  BMap: any
 
   // 编辑 JSON 的存储对象
   opener: any

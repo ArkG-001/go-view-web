@@ -14,7 +14,7 @@ const RootRoute: Array<RouteRecordRaw> = [
     redirect: PageEnum.BASE_HOME,
     component: Layout,
     meta: {
-      title: 'Root',
+      title: 'Root'
     },
     children: [
       ...HttpErrorPage,
@@ -22,22 +22,22 @@ const RootRoute: Array<RouteRecordRaw> = [
       modules.projectRoutes,
       modules.chartRoutes,
       modules.previewRoutes,
-      modules.editRoutes
+      modules.editRoutes,
+      modules.chatRoutes
     ]
   }
 ]
 
-
-export const constantRouter: any[] = [LoginRoute, ...RootRoute, ReloadRoute];
+export const constantRouter: any[] = [LoginRoute, ...RootRoute, ReloadRoute]
 
 const router = createRouter({
   history: createWebHashHistory(''),
   routes: constantRouter,
-  strict: true,
+  strict: true
 })
 
 export function setupRouter(app: App) {
-  app.use(router);
+  app.use(router)
   // 创建路由守卫
   createRouterGuards(router)
 }

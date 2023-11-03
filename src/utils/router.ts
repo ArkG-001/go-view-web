@@ -14,24 +14,22 @@ import { logoutApi } from '@/api/path'
  * @param isReplace
  * @param windowOpen
  */
-export const routerTurnByName = (
-  pageName: string,
-  isReplace?: boolean,
-  windowOpen?: boolean
-) => {
+export const routerTurnByName = (pageName: string, isReplace?: boolean, windowOpen?: boolean) => {
   if (windowOpen) {
     const path = fetchPathByName(pageName, 'href')
     openNewWindow(path)
     return
   }
   if (isReplace) {
+    console.log(pageName, 'pageName')
+    console.log(router, 'router')
     router.replace({
-      name: pageName,
+      name: pageName
     })
     return
   }
   router.push({
-    name: pageName,
+    name: pageName
   })
 }
 
@@ -43,7 +41,7 @@ export const routerTurnByName = (
 export const fetchPathByName = (pageName: string, p?: string) => {
   try {
     const pathData = router.resolve({
-      name: pageName,
+      name: pageName
     })
     return p ? (pathData as any)[p] : pathData
   } catch (error) {
@@ -73,12 +71,12 @@ export const routerTurnByPath = (
   }
   if (isReplace) {
     router.replace({
-      path: fullPath,
+      path: fullPath
     })
     return
   }
   router.push({
-    path: fullPath,
+    path: fullPath
   })
 }
 
@@ -107,7 +105,7 @@ export const reloadRoutePage = () => {
 export const logout = async () => {
   try {
     const res = await logoutApi()
-    if(res && res.code === ResultEnum.SUCCESS) {
+    if (res && res.code === ResultEnum.SUCCESS) {
       window['$message'].success(window['$t']('global.logout_success'))
       clearCookie(RequestHttpHeaderEnum.COOKIE)
       clearLocalStorage(StorageEnum.GO_SYSTEM_STORE)
@@ -204,9 +202,9 @@ export const loginCheck = () => {
 
 /**
  * * 预览地址
- * @returns 
+ * @returns
  */
- export const previewPath = (id?: string | number) => {
+export const previewPath = (id?: string | number) => {
   const { origin, pathname } = document.location
   const path = fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
   const previewPath = `${origin}${pathname}${path}/${id || fetchRouteParamsLocation()}`

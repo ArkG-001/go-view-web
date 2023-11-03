@@ -78,10 +78,15 @@
                     </div>
                   </div>
                 </n-form-item>
-                <n-form-item>
+                <n-form-item v-if="isChart()">
                   <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>{{
                     $t('login.form_button')
                   }}</n-button>
+                </n-form-item>
+                <n-form-item v-else>
+                  <n-button type="primary" @click="handleSubmitChart" size="large" :loading="loading" block
+                    >{{ $t('login.form_button') }}--chart</n-button
+                  >
                 </n-form-item>
               </n-form>
             </n-card>
@@ -203,6 +208,41 @@ const handleSubmit = async (e: Event) => {
     }
   })
 }
+// 登录聊天系统
+const handleSubmitChart = async (e: Event) => {
+  e.preventDefault()
+  formRef.value.validate(async (errors: any) => {
+    if (!errors) {
+      const { username, password } = formInline
+      loading.value = true
+      // 提交请求
+      const res = await loginApi({
+        username,
+        password
+      })
+      if (res && res.data) {
+        const { tokenValue, tokenName } = res.data.token
+        const { nickname, username, id } = res.data.userinfo
+
+        // 存储到 pinia
+        systemStore.setItem(SystemStoreEnum.USER_INFO, {
+          [SystemStoreUserInfoEnum.USER_TOKEN]: tokenValue,
+          [SystemStoreUserInfoEnum.TOKEN_NAME]: tokenName,
+          [SystemStoreUserInfoEnum.USER_ID]: id,
+          [SystemStoreUserInfoEnum.USER_NAME]: username,
+          [SystemStoreUserInfoEnum.NICK_NAME]: nickname,
+          t
+        })
+
+        window['$message'].success(t('login.login_success'))
+        routerTurnByName(PageEnum.BASE_CHAT_NAME, true)
+      }
+      loading.value = false
+    } else {
+      window['$message'].error(t('login.login_message'))
+    }
+  })
+}
 
 onMounted(() => {
   setTimeout(() => {
@@ -215,6 +255,12 @@ onMounted(() => {
 
   shuffleHandle()
 })
+
+// 判断当前url是否包含chart字段
+const isChart = () => {
+  console.log(window.location.href, 'window.location.href')
+  return !window.location.href.includes('chat')
+}
 </script>
 
 <style lang="scss" scoped>

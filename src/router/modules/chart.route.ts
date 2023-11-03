@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 import { ChartEnum } from '@/enums/pageEnum'
+import chatRoutes from '@/router/modules/chat.route'
 
 // 引入路径
 const importPath = {
@@ -13,9 +14,10 @@ const chartRoutes: RouteRecordRaw = {
   meta: {
     title: '工作空间',
     isRoot: true,
-    noKeepAlive: true,
+    noKeepAlive: true
   }
 }
 
+console.log(chartRoutes, 'chartRoutes')
 
 export default chartRoutes
